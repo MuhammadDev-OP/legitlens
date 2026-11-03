@@ -8,6 +8,7 @@ dist
 .DS_Store
 coverage
 *.zip
+!apps/extension/.output/*.zip
 .env
 .env.*
 !.env.example
