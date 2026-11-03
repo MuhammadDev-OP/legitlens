@@ -1,7 +1,12 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import type { Locale, ScoreResult } from "@legitlens/rules";
+import {
+  sanitizeDisplayText,
+  sanitizeDisplayUrl,
+  type Locale,
+  type ScoreResult,
+} from "@legitlens/rules";
 
 const verdictCopy: Record<string, string> = {
   looks_ok: "Looks OK",
@@ -80,9 +85,11 @@ export function CheckClient() {
 
       {result && (
         <div className={`verdict-block ${result.verdict}`} role="status">
-          <div style={{ fontSize: "0.85rem", color: "var(--cream-dim)" }}>{result.domain}</div>
+          <div style={{ fontSize: "0.85rem", color: "var(--cream-dim)" }}>
+            {sanitizeDisplayUrl(result.domain) || "—"}
+          </div>
           <div style={{ fontSize: "1.6rem", fontFamily: "var(--font-display)", marginTop: 4 }}>
-            {verdictCopy[result.verdict] ?? result.verdict}
+            {verdictCopy[result.verdict] ?? sanitizeDisplayText(result.verdict, 40)}
           </div>
           <div style={{ fontSize: "0.9rem", color: "var(--cream-dim)" }}>
             Score {result.score}/100
@@ -90,7 +97,7 @@ export function CheckClient() {
           {result.reasons.length > 0 ? (
             <ul className="reasons">
               {result.reasons.map((r) => (
-                <li key={r.id}>{r.text}</li>
+                <li key={r.id}>{sanitizeDisplayText(r.text, 400)}</li>
               ))}
             </ul>
           ) : (

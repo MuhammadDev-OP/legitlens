@@ -1,15 +1,19 @@
 import {
   lookupRdap,
   normalizeDomain,
+  UnsafeUrlError,
   type DomainMeta,
 } from "@legitlens/rules";
 import { NextRequest, NextResponse } from "next/server";
+import { createRdapFetcher } from "@/lib/rdapFetch";
+import { clientKey, rateLimit } from "@/lib/rateLimit";
+import { rdapQuerySchema } from "@/lib/validation";
 
-export const runtime = "edge";
+/** Node runtime required for DNS-based SSRF checks. */
+export const runtime = "nodejs";
 
-/** Simple in-memory cache per isolate (best-effort). */
 const cache = new Map<string, { expires: number; meta: DomainMeta }>();
-const TTL_MS = 1000 * 60 * 60 * 6; // 6 hours
+const TTL_MS = 1000 * 60 * 60 * 6;
 
 function cors(res: NextResponse) {
   res.headers.set("Access-Control-Allow-Origin", "*");
@@ -24,21 +28,28 @@ export async function OPTIONS() {
 }
 
 export async function GET(req: NextRequest) {
-  const domainParam = req.nextUrl.searchParams.get("domain");
-  if (!domainParam) {
-    return cors(
-      NextResponse.json({ error: "Missing domain query parameter" }, { status: 400 }),
-    );
+  const rl = rateLimit(`rdap:${clientKey(req)}`, { limit: 60, windowMs: 60_000 });
+  if (!rl.ok) {
+    const res = NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    res.headers.set("Retry-After", String(rl.retryAfterSec));
+    return cors(res);
+  }
+
+  const parsed = rdapQuerySchema.safeParse({
+    domain: req.nextUrl.searchParams.get("domain") ?? "",
+  });
+  if (!parsed.success) {
+    return cors(NextResponse.json({ error: "Invalid domain" }, { status: 400 }));
   }
 
   let domain: string;
   try {
-    domain = normalizeDomain(domainParam);
+    domain = normalizeDomain(parsed.data.domain);
   } catch {
     return cors(NextResponse.json({ error: "Invalid domain" }, { status: 400 }));
   }
 
-  if (!domain || !domain.includes(".")) {
+  if (!domain || !domain.includes(".") || domain.length > 253) {
     return cors(NextResponse.json({ error: "Invalid domain" }, { status: 400 }));
   }
 
@@ -47,7 +58,14 @@ export async function GET(req: NextRequest) {
     return cors(NextResponse.json(hit.meta));
   }
 
-  const meta = await lookupRdap(domain);
-  cache.set(domain, { expires: Date.now() + TTL_MS, meta });
-  return cors(NextResponse.json(meta));
+  try {
+    const meta = await lookupRdap(domain, { fetcher: createRdapFetcher() });
+    cache.set(domain, { expires: Date.now() + TTL_MS, meta });
+    return cors(NextResponse.json(meta));
+  } catch (e) {
+    if (e instanceof UnsafeUrlError) {
+      return cors(NextResponse.json({ error: "Lookup blocked" }, { status: 400 }));
+    }
+    return cors(NextResponse.json({ error: "Lookup failed" }, { status: 502 }));
+  }
 }

@@ -3,7 +3,13 @@ import {
   badgeColor,
   badgeText,
 } from "../lib/analyze";
-import type { PageSignalsInput, ScoreResult } from "@legitlens/rules";
+import {
+  isExtensionPageSender,
+  isTrustedSender,
+  parseMessage,
+} from "../lib/messages";
+import type { ScoreResult } from "@legitlens/rules";
+import { sanitizeDisplayText } from "@legitlens/rules";
 
 export default defineBackground(() => {
   async function setBadge(tabId: number, result: ScoreResult) {
@@ -15,44 +21,62 @@ export default defineBackground(() => {
     await chrome.storage.session.set({ [`result:${tabId}`]: result });
   }
 
-  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message?.type === "PAGE_SCAN" && sender.tab?.id != null && sender.tab.url) {
+  chrome.runtime.onMessage.addListener((raw, sender, sendResponse) => {
+    if (!isTrustedSender(sender)) {
+      sendResponse({ ok: false, error: "Unauthorized" });
+      return false;
+    }
+
+    const message = parseMessage(raw);
+    if (!message) {
+      sendResponse({ ok: false, error: "Invalid message" });
+      return false;
+    }
+
+    if (message.type === "PAGE_SCAN") {
+      if (sender.tab?.id == null || !sender.tab.url) {
+        sendResponse({ ok: false, error: "Missing tab" });
+        return false;
+      }
       const tabId = sender.tab.id;
-      const page = message.page as PageSignalsInput;
-      analyzeUrl(sender.tab.url, page)
+      const tabUrl = sender.tab.url;
+      analyzeUrl(tabUrl, message.page)
         .then(async (result) => {
           await setBadge(tabId, result);
           sendResponse({ ok: true, result });
         })
-        .catch((err: unknown) => {
-          sendResponse({
-            ok: false,
-            error: err instanceof Error ? err.message : "analyze failed",
-          });
+        .catch(() => {
+          sendResponse({ ok: false, error: "Analyze failed" });
         });
       return true;
     }
 
-    if (message?.type === "GET_RESULT") {
-      const tabId = message.tabId as number;
-      chrome.storage.session.get(`result:${tabId}`).then((data) => {
-        sendResponse({ result: data[`result:${tabId}`] ?? null });
+    if (message.type === "GET_RESULT") {
+      if (!isExtensionPageSender(sender)) {
+        sendResponse({ ok: false, error: "Unauthorized" });
+        return false;
+      }
+      chrome.storage.session.get(`result:${message.tabId}`).then((data) => {
+        sendResponse({ result: data[`result:${message.tabId}`] ?? null });
       });
       return true;
     }
 
-    if (message?.type === "ANALYZE_URL") {
-      analyzeUrl(message.url as string, message.page as PageSignalsInput | undefined, message.locale)
+    if (message.type === "ANALYZE_URL") {
+      if (!isExtensionPageSender(sender)) {
+        sendResponse({ ok: false, error: "Unauthorized" });
+        return false;
+      }
+      analyzeUrl(message.url, message.page, message.locale)
         .then((result) => sendResponse({ ok: true, result }))
-        .catch((err: unknown) =>
-          sendResponse({
-            ok: false,
-            error: err instanceof Error ? err.message : "analyze failed",
-          }),
-        );
+        .catch(() => sendResponse({ ok: false, error: "Analyze failed" }));
       return true;
     }
 
-    return undefined;
+    sendResponse({
+      ok: false,
+      error: sanitizeDisplayText("Unhandled", 40),
+    });
+    return false;
   });
 });

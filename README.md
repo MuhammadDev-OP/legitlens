@@ -140,7 +140,9 @@ pnpm build
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md), [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md), and [docs/ROADMAP.md](./docs/ROADMAP.md) (includes 10+ good first issues).
 
-Security reports: [SECURITY.md](./SECURITY.md).
+Security reports & threat model: [SECURITY.md](./SECURITY.md).
+
+**Maintainer note:** protect `main` with required PRs + required CI / CodeQL / gitleaks checks (details in SECURITY.md). Muhammad applies branch protection in GitHub settings.
 
 ## Licence
 

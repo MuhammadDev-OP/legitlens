@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import {
   buildWhatsAppShareUrl,
+  sanitizeDisplayText,
+  sanitizeDisplayUrl,
   type Locale,
   type ScoreResult,
   verdictLabel,
@@ -75,19 +77,22 @@ export function Popup() {
           setResult(cached.result as ScoreResult);
           setLoading(false);
         }
+        const { injectPageScan } = await import("../../lib/injectScan");
+        const page = await injectPageScan(tab.id);
         const response = await chrome.runtime.sendMessage({
           type: "ANALYZE_URL",
           url: tab.url,
+          page,
           locale,
         });
         if (cancelled) return;
         if (response?.ok) {
           setResult(response.result as ScoreResult);
         } else {
-          setError(response?.error ?? "Could not analyze");
+          setError("Could not analyze");
         }
-      } catch (e) {
-        if (!cancelled) setError(e instanceof Error ? e.message : "Failed");
+      } catch {
+        if (!cancelled) setError("Could not analyze");
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -149,7 +154,7 @@ export function Popup() {
             }}
           >
             <div style={{ fontSize: 12, color: "var(--muted)", wordBreak: "break-all" }}>
-              {result.domain || tabUrl}
+              {sanitizeDisplayUrl(result.domain || tabUrl) || "—"}
             </div>
             <div
               style={{
@@ -179,7 +184,7 @@ export function Popup() {
               <ul style={{ margin: 0, paddingInlineStart: 18, fontSize: 13, lineHeight: 1.45 }}>
                 {result.reasons.map((r) => (
                   <li key={r.id} style={{ marginBottom: 6 }}>
-                    {r.text}
+                    {sanitizeDisplayText(r.text, 400)}
                   </li>
                 ))}
               </ul>

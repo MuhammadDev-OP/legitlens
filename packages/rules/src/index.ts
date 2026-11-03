@@ -46,3 +46,17 @@ export { signalPhishingList } from "./signals/phishingList.js";
 
 export { BRANDS, SHOP_TOKENS } from "./data/brands.js";
 export { PHISHING_SAMPLE, PHISHING_SET } from "./data/phishing-sample.js";
+
+export { sanitizeDisplayText, sanitizeDisplayUrl } from "./sanitize.js";
+
+export {
+  UnsafeUrlError,
+  assertSafeHostname,
+  assertSafeOutboundUrl,
+  isBlockedIp,
+  isBlockedIpv4,
+  isBlockedIpv6,
+  parseIpv4,
+  safeFetch,
+} from "./ssrf.js";
+export type { AssertSafeUrlOptions, DnsResolver, SafeFetchOptions } from "./ssrf.js";

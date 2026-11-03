@@ -2,33 +2,51 @@ import {
   lookupRdap,
   normalizeDomain,
   scoreDomain,
-  type Locale,
+  UnsafeUrlError,
 } from "@legitlens/rules";
 import { NextRequest, NextResponse } from "next/server";
+import { createRdapFetcher } from "@/lib/rdapFetch";
+import { clientKey, rateLimit } from "@/lib/rateLimit";
+import { checkBodySchema } from "@/lib/validation";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
+  const rl = rateLimit(`check:${clientKey(req)}`, { limit: 30, windowMs: 60_000 });
+  if (!rl.ok) {
+    const res = NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    res.headers.set("Retry-After", String(rl.retryAfterSec));
+    return res;
+  }
+
+  let json: unknown;
   try {
-    const body = (await req.json()) as { url?: string; locale?: Locale };
-    if (!body.url || typeof body.url !== "string") {
-      return NextResponse.json({ error: "url is required" }, { status: 400 });
-    }
-    const domain = normalizeDomain(body.url);
-    if (!domain.includes(".")) {
+    json = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
+
+  const parsed = checkBodySchema.safeParse(json);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+  }
+
+  try {
+    const domain = normalizeDomain(parsed.data.url);
+    if (!domain.includes(".") || domain.length > 253) {
       return NextResponse.json({ error: "Invalid URL or domain" }, { status: 400 });
     }
-    const domainMeta = await lookupRdap(domain);
+    const domainMeta = await lookupRdap(domain, { fetcher: createRdapFetcher() });
     const result = scoreDomain({
       domain,
       domainMeta,
-      locale: body.locale ?? "en",
+      locale: parsed.data.locale ?? "en",
     });
     return NextResponse.json({ result });
   } catch (e) {
-    return NextResponse.json(
-      { error: e instanceof Error ? e.message : "Check failed" },
-      { status: 500 },
-    );
+    if (e instanceof UnsafeUrlError) {
+      return NextResponse.json({ error: "Lookup blocked" }, { status: 400 });
+    }
+    return NextResponse.json({ error: "Check failed" }, { status: 502 });
   }
 }
