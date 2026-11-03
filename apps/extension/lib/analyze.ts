@@ -41,6 +41,8 @@ export function badgeColor(verdict: ScoreResult["verdict"]): string {
       return "#C47B2D";
     case "high_risk":
       return "#A33B2B";
+    default:
+      return "#9aa3b5";
   }
 }
 
@@ -52,5 +54,7 @@ export function badgeText(verdict: ScoreResult["verdict"]): string {
       return "!";
     case "high_risk":
       return "!!";
+    default:
+      return "?";
   }
 }

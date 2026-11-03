@@ -6,11 +6,17 @@ import {
   verdictLabel,
 } from "@legitlens/rules";
 
-const verdictStyle: Record<ScoreResult["verdict"], { bg: string; label: string }> = {
-  looks_ok: { bg: "var(--ok)", label: "looks_ok" },
-  be_careful: { bg: "var(--warn)", label: "be_careful" },
-  high_risk: { bg: "var(--risk)", label: "high_risk" },
-};
+function styleFor(verdict: ScoreResult["verdict"]): { bg: string } {
+  switch (verdict) {
+    case "looks_ok":
+      return { bg: "var(--ok)" };
+    case "high_risk":
+      return { bg: "var(--risk)" };
+    case "be_careful":
+    default:
+      return { bg: "var(--warn)" };
+  }
+}
 
 export function Popup() {
   const [locale, setLocale] = useState<Locale>("en");
@@ -139,7 +145,7 @@ export function Popup() {
               background: "var(--ink-soft)",
               border: "1px solid #2a3142",
               padding: 14,
-              borderLeft: `4px solid ${verdictStyle[result.verdict].bg}`,
+              borderLeft: `4px solid ${styleFor(result.verdict).bg}`,
             }}
           >
             <div style={{ fontSize: 12, color: "var(--muted)", wordBreak: "break-all" }}>
@@ -150,7 +156,7 @@ export function Popup() {
                 marginTop: 8,
                 fontSize: 20,
                 fontWeight: 700,
-                color: verdictStyle[result.verdict].bg,
+                color: styleFor(result.verdict).bg,
               }}
             >
               {verdictLabel(result.verdict, locale)}

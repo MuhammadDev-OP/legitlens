@@ -28,6 +28,9 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
+      - name: Build rules
+        run: pnpm --filter @legitlens/rules build
+
       - name: Lint
         run: pnpm lint
 
@@ -36,9 +39,6 @@ jobs:
 
       - name: Test
         run: pnpm test
-
-      - name: Build rules
-        run: pnpm --filter @legitlens/rules build
 
       - name: Build web
         run: pnpm --filter @legitlens/web build
