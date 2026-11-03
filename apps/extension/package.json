@@ -20,10 +20,10 @@
   "devDependencies": {
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "@types/chrome": "^0.0.287",
-    "@vitejs/plugin-react": "^4.3.4",
-    "typescript": "^5.7.2",
-    "vite": "^5.4.11",
-    "wxt": "^0.19.22"
+    "@types/chrome": "^0.3.7",
+    "@vitejs/plugin-react": "^6.1.2",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5",
+    "wxt": "^0.21.5"
   }
 }
