@@ -1,0 +1,38 @@
+:root {
+  --ink: #12161f;
+  --ink-soft: #1a1f2b;
+  --gold: #c9a227;
+  --terracotta: #b85c38;
+  --cream: #f5e6c8;
+  --ok: #1b7f5a;
+  --warn: #c47b2d;
+  --risk: #a33b2b;
+  --muted: #9aa3b5;
+  --geo: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cpath fill='%23c9a227' fill-opacity='0.08' d='M20 0L40 20L20 40L0 20z'/%3E%3C/svg%3E");
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  width: 360px;
+  min-height: 420px;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  background: var(--ink) var(--geo);
+  color: var(--cream);
+}
+
+#root {
+  min-height: 420px;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+a {
+  color: var(--gold);
+}

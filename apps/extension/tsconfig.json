@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "types": ["chrome"],
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": ["entrypoints/**/*", "components/**/*", "lib/**/*", "wxt.config.ts", ".wxt/**/*"]
+}
