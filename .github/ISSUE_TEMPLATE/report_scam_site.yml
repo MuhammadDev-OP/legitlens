@@ -1,0 +1,27 @@
+name: Report a scam site
+description: Suggest a domain that should trigger stronger signals (for rules research)
+title: "[report-site] "
+labels: ["signal-research"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Reports inform **rule research** only. LegitLens will not publish “this is a scam” labels.
+        Do not dox individuals. Prefer domains and public pages.
+  - type: input
+    id: domain
+    attributes:
+      label: Domain
+    validations:
+      required: true
+  - type: textarea
+    id: signals
+    attributes:
+      label: What signals did you notice?
+      description: e.g. brand lookalike, crypto-only payment, missing policies, very new domain
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Public evidence links (optional)

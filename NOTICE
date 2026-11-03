@@ -1,0 +1,35 @@
+LegitLens
+Copyright (c) 2026 Muhammad Bangash / Qurtuba Labs
+Powered by Codinito — https://www.codinito.com
+
+This product is licensed under the GNU Affero General Public License v3.0.
+See the LICENSE file for details.
+
+---------------------------------------------------------------------------
+Third-party data attributions (phishing / block lists)
+---------------------------------------------------------------------------
+
+Phishing.Database
+  Source: https://github.com/Phishing-Database/Phishing.Database
+  Licence: MIT
+  Used as: optional / sample-bundled indicators for known-bad hostnames.
+  DO sync only MIT-licensed releases; do not vendor non-MIT forks.
+
+destroylist (phishdestroy)
+  Source: https://github.com/phishdestroy/destroylist
+  Licence: MIT
+  Used as: optional / sample-bundled indicators for known-bad hostnames.
+
+---------------------------------------------------------------------------
+NOT used (licence terms forbid this redistribution / use pattern)
+---------------------------------------------------------------------------
+
+- OpenPhish
+- Google Safe Browsing
+
+---------------------------------------------------------------------------
+RDAP
+---------------------------------------------------------------------------
+
+Domain registration age is queried via the public RDAP ecosystem using the
+IANA DNS bootstrap file: https://data.iana.org/rdap/dns.json (no API key).

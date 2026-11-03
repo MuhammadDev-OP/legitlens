@@ -1,0 +1,37 @@
+name: False positive
+description: A legitimate site scored Be careful / High risk incorrectly
+title: "[false-positive] "
+labels: ["false-positive"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        We use neutral wording on purpose. Help us tune signals without defaming honest shops.
+  - type: input
+    id: domain
+    attributes:
+      label: Domain
+      placeholder: example.com
+    validations:
+      required: true
+  - type: dropdown
+    id: verdict
+    attributes:
+      label: Verdict you saw
+      options:
+        - Be careful
+        - High risk
+    validations:
+      required: true
+  - type: textarea
+    id: reasons
+    attributes:
+      label: Reasons listed in the UI
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why you believe this is a false positive
+    validations:
+      required: true
