@@ -4,7 +4,13 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "How to tell if a website is legit",
   description:
-    "Practical checks before you pay online: domain age, brand lookalikes, policies, payment methods, and pressure tactics.",
+    "Practical checks before you pay online: domain age, brand lookalikes, policies, payment methods, and pressure tactics. Free guide from LegitLens.",
+  alternates: { canonical: "/guides/is-website-legit" },
+  keywords: ["is this website legit", "check if a website is safe", "website scam signs"],
+  openGraph: {
+    title: "How to tell if a website is legit",
+    images: ["/og.png"],
+  },
 };
 
 export default function GuideLegitPage() {

@@ -1,7 +1,14 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fraunces, Source_Serif_4, Noto_Nastaliq_Urdu } from "next/font/google";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import {
+  DEFAULT_KEYWORDS,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_TAGLINE,
+  SITE_URL,
+} from "@/lib/site";
 import "./globals.css";
 
 const display = Fraunces({
@@ -23,19 +30,59 @@ const urdu = Noto_Nastaliq_Urdu({
   display: "swap",
 });
 
+export const viewport: Viewport = {
+  themeColor: "#0e1219",
+  width: "device-width",
+  initialScale: 1,
+};
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "LegitLens — by Qurtuba Labs · powered by Codinito",
-    template: "%s · LegitLens",
+    default: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    template: `%s · ${SITE_NAME}`,
   },
-  description:
-    "Free open-source anti-scam & fake-shop checker. A second opinion before you pay — explainable signals, EN + UR. By Qurtuba Labs · powered by Codinito.",
-  metadataBase: new URL("https://legitlens.vercel.app"),
+  description: SITE_DESCRIPTION,
+  keywords: [...DEFAULT_KEYWORDS],
+  authors: [{ name: "Muhammad Bangash" }, { name: "Qurtuba Labs" }],
+  creator: "Qurtuba Labs · powered by Codinito",
+  publisher: "Qurtuba Labs",
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
-    title: "LegitLens",
-    description: "Check a shop or link before you pay. Free · open source · AGPL-3.0",
     type: "website",
+    locale: "en_US",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} — Check if a website is legit or a scam risk`,
+    description: SITE_DESCRIPTION,
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "LegitLens — free open-source fake shop and scam link checker by Qurtuba Labs",
+      },
+    ],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    description: SITE_DESCRIPTION,
+    images: ["/og.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  category: "security",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

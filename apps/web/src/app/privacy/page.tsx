@@ -4,6 +4,7 @@ export const metadata: Metadata = {
   title: "Privacy",
   description:
     "LegitLens privacy promise: no browsing history stored; only the domain name is sent for RDAP lookup.",
+  alternates: { canonical: "/privacy" },
 };
 
 export default function PrivacyPage() {

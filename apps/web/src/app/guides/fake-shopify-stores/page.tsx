@@ -4,7 +4,13 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Spotting fake Shopify stores",
   description:
-    "How clone storefronts reuse themes, myshopify URLs, and huge discounts — and what to verify before checkout.",
+    "How clone storefronts reuse themes, myshopify URLs, and huge discounts — and what to verify before checkout. Fake online shop checker guide.",
+  alternates: { canonical: "/guides/fake-shopify-stores" },
+  keywords: ["fake shopify store", "fake online shop checker", "myshopify scam"],
+  openGraph: {
+    title: "Spotting fake Shopify stores",
+    images: ["/og.png"],
+  },
 };
 
 export default function GuideShopifyPage() {

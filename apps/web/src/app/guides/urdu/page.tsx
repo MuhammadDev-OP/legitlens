@@ -5,6 +5,12 @@ export const metadata: Metadata = {
   title: "ویب سائٹ چیک کرنے کی اردو گائیڈ",
   description:
     "آن لائن خریداری سے پہلے ڈومین کی عمر، جعلی برانڈ نام، ادائیگی کے طریقے اور دباؤ والی رعایتیں کیسے دیکھیں — LegitLens اردو گائیڈ۔",
+  alternates: { canonical: "/guides/urdu", languages: { ur: "/guides/urdu", en: "/guides/is-website-legit" } },
+  openGraph: {
+    locale: "ur_PK",
+    title: "ویب سائٹ چیک کرنے کی اردو گائیڈ",
+    images: ["/og.png"],
+  },
 };
 
 export default function GuideUrduPage() {
