@@ -1,0 +1,17 @@
+node_modules
+dist
+.output
+.wxt
+.next
+.turbo
+*.log
+.DS_Store
+coverage
+*.zip
+.env
+.env.local
+.env*.local
+apps/extension/.output
+apps/extension/web-ext.config.ts
+*.tsbuildinfo
+.pnpm-store
