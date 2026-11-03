@@ -1,0 +1,38 @@
+name: Bug report
+description: Something broken in the extension, web checker, or rules engine
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping LegitLens. Please avoid pasting passwords or full payment pages.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - packages/rules
+        - apps/extension
+        - apps/web
+        - CI / docs
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: Expected vs actual behaviour
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version / commit
+      placeholder: e.g. main @ abc1234
