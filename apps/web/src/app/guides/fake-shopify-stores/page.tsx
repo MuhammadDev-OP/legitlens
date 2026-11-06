@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function GuideShopifyPage() {
   return (
-    <article className="section guide-prose" style={{ borderTop: "none", paddingTop: "2rem" }}>
+    <article className="page-section guide-prose container" style={{ borderTop: "none", paddingTop: "2rem" }}>
       <h1>Spotting fake Shopify stores</h1>
       <p>
         Shopify makes it easy to launch a real business — and easy for copycats to spin up

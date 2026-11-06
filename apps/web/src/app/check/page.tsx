@@ -39,16 +39,23 @@ export async function generateMetadata({
   };
 }
 
-export default function CheckPage() {
+export default async function CheckPage({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}) {
+  const sp = await searchParams;
+  const initialUrl = typeof sp.url === "string" ? sp.url : typeof sp.domain === "string" ? sp.domain : "";
+
   return (
-    <section className="section" style={{ borderTop: "none", paddingTop: "2rem" }}>
+    <section className="page-section container" style={{ borderTop: "none", paddingTop: "2rem" }}>
       <h1 style={{ marginTop: 0, color: "var(--gold)" }}>Check if a website is safe</h1>
       <p className="lead">
         Paste a shop URL or domain. LegitLens scores explainable signals and returns Looks
         OK / Be careful / High risk — never a defamatory “scam” label, and never invented
         trust scores.
       </p>
-      <CheckClient />
+      <CheckClient initialUrl={initialUrl} />
     </section>
   );
 }

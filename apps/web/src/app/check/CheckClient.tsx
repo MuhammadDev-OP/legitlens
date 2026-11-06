@@ -14,8 +14,8 @@ const verdictCopy: Record<string, string> = {
   high_risk: "High risk",
 };
 
-export function CheckClient() {
-  const [url, setUrl] = useState("");
+export function CheckClient({ initialUrl = "" }: { initialUrl?: string }) {
+  const [url, setUrl] = useState(initialUrl.slice(0, 500));
   const [locale, setLocale] = useState<Locale>("en");
   const [result, setResult] = useState<ScoreResult | null>(null);
   const [error, setError] = useState<string | null>(null);
