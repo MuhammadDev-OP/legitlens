@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef } from "react";
 import { useHomeMotion } from "./useHomeMotion";
 
-export function HomeShell({ children }: { children: ReactNode }) {
+export function HomeShell({ children }: { children: React.ReactNode }) {
   const root = useRef<HTMLDivElement>(null);
   useHomeMotion(root);
 
