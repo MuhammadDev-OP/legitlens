@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export default function GuideUrduPage() {
   return (
     <article
-      className="section guide-prose locale-ur"
+      className="page-section guide-prose locale-ur container"
       style={{ borderTop: "none", paddingTop: "2rem" }}
       lang="ur"
       dir="rtl"

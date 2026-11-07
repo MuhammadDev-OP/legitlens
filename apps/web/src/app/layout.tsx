@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Source_Serif_4, Noto_Nastaliq_Urdu } from "next/font/google";
+import { IconSprite } from "@/components/IconSprite";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import {
@@ -10,9 +11,11 @@ import {
   SITE_URL,
 } from "@/lib/site";
 import "./globals.css";
+import "./chrome.css";
 
 const display = Fraunces({
   subsets: ["latin"],
+  style: ["normal", "italic"],
   variable: "--font-fraunces",
   display: "swap",
 });
@@ -88,17 +91,14 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${display.variable} ${body.variable} ${urdu.variable}`}>
-      <body
-        style={{
-          ["--font-display" as string]: "var(--font-fraunces), Georgia, serif",
-          ["--font-body" as string]: "var(--font-source-serif), Georgia, serif",
-        }}
-      >
-        <div className="container">
-          <SiteHeader />
-          <main>{children}</main>
-          <SiteFooter />
-        </div>
+      <body>
+        <a className="skip" href="#main">
+          Skip to content
+        </a>
+        <IconSprite />
+        <SiteHeader />
+        <main id="main">{children}</main>
+        <SiteFooter />
       </body>
     </html>
   );

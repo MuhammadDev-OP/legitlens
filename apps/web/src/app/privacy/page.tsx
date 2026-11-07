@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <section className="section guide-prose" style={{ borderTop: "none", paddingTop: "2rem" }}>
+    <section className="page-section guide-prose container" style={{ borderTop: "none", paddingTop: "2rem" }}>
       <h1 style={{ color: "var(--gold)" }}>Privacy</h1>
       <p>
         <strong>LegitLens</strong> is built to give you a second opinion without watching
