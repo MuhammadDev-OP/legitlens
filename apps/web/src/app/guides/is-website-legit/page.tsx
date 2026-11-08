@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function GuideLegitPage() {
   return (
-    <article className="section guide-prose" style={{ borderTop: "none", paddingTop: "2rem" }}>
+    <article className="page-section guide-prose container" style={{ borderTop: "none", paddingTop: "2rem" }}>
       <h1>How to tell if a website is legit</h1>
       <p>
         No single clue proves a shop is honest or dishonest. LegitLens stacks several{" "}
